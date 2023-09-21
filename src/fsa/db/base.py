@@ -24,8 +24,7 @@ class DatabaseConnector:
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Publisher (
                         publisher_id INTEGER PRIMARY KEY,
-                        trade_name TEXT,
-                        company_name TEXT,
+                        name TEXT NOT NULL UNIQUE,
                         address TEXT,
                         url TEXT,
                         created_at DATE
@@ -36,15 +35,15 @@ class DatabaseConnector:
                         title TEXT NOT NULL,
                         language TEXT,
                         year INTEGER,
-                        n_pages INTEGER,
-                        created_at DATE,
                         publisher_id INTEGER,
+                        created_at DATE,
+                        UNIQUE(title, year)
                         FOREIGN KEY (publisher_id) REFERENCES Publisher (publisher_id)
                         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Book (
                         document_id INTEGER PRIMARY KEY,
-                        isbn TEXT,
+                        isbn TEXT UNIQUE,
                         edition TEXT,
                         publication_place TEXT,
                         FOREIGN KEY (document_id) REFERENCES Publisher (document_id)
@@ -52,7 +51,7 @@ class DatabaseConnector:
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Paper (
                         document_id INTEGER PRIMARY KEY,
-                        doi TEXT,
+                        doi TEXT UNIQUE,
                         journal TEXT,
                         issue TEXT,
                         pages TEXT,
@@ -68,13 +67,14 @@ class DatabaseConnector:
                         email TEXT,
                         social_url TEXT,
                         nationality TEXT,
-                        created_at DATE
+                        created_at DATE,
+                        UNIQUE(last_name, remaining_name)
                         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Writes (
                         document_id INTEGER,
                         author_id INTEGER,
-                        PRIMARY KEY(document_id, author_id)
+                        PRIMARY KEY (document_id, author_id)
                         FOREIGN KEY (document_id) REFERENCES Document (document_id),
                         FOREIGN KEY (author_id) REFERENCES Author (author_id)
                         )""")
