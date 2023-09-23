@@ -9,7 +9,7 @@ class Publisher:
     name: str
     address: str
     url: str
-    document_ids: list[int]
+    document_ids: list[int] | None = None
     created_at: datetime = datetime.now()
 
     def get_parsed_dict(self) -> dict[str, Any]:
@@ -45,11 +45,8 @@ class Author:
     email: str | None
     social_url: str | None
     nationality: str | None
-    document_ids: list[int]
+    document_ids: list[int] | None = None
     created_at: datetime = datetime.now()
-
-    def __str__(self):
-        return f"{self.last_name}, {self.remaining_name}"
 
     def get_parsed_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -67,6 +64,20 @@ class Author:
             document_ids=[]
         )
 
+    @classmethod
+    def from_db_row(self, row: dict) -> Self:
+        return Author(
+            author_id=row.get("author_id"),
+            remaining_name=row.get("remaining_name"),
+            last_name=row.get("last_name"),
+            birth_date=row.get("birth_date"),
+            email=row.get("email"),
+            social_url=row.get("social_url"),
+            nationality=row.get("nationality"),
+            document_ids=[],
+            created_at=row.get("created_at")
+        )
+
 
 @dataclass(kw_only=True)
 class Document:
@@ -76,7 +87,7 @@ class Document:
     year: int | None
     tags: list[str]
     publisher: Publisher | None
-    authors: list[Author]
+    authors: list[Author] | None = None
     created_at: datetime = datetime.now()
 
     def get_parsed_dict(self) -> dict[str, Any]:
@@ -89,6 +100,48 @@ class Book(Document):
     isbn: str | None
     edition: str | None
 
+    @classmethod
+    def from_raw_data(self, data: dict) -> Self:
+        """Create a new Book object from raw data"""
+
+        publisher: Publisher = Publisher.from_raw_data(data.get("publisher"))
+
+        authors: list[Author] = []
+        for author in data.get("author"):
+            authors.append(Author.from_raw_data(author))
+
+        return Book(
+            title=data.get("title"),
+            language=data.get("language"),
+            year=int(data.get("issued").get("date-parts")[0][0]),
+            tags=[],
+            publisher=publisher,
+            authors=authors,
+            publication_place=data.get("publisher-place"),
+            isbn=data.get("ISBN"),
+            edition=data.get("edition")
+        )
+
+    @classmethod
+    def from_db_row(self, row: dict) -> Self:
+        """Create a new Book object from a database row"""
+
+        publisher: Publisher = Publisher.from_db_row(row)
+
+        return Book(
+            document_id=row.get("document_id"),
+            title=row.get("title"),
+            language=row.get("language"),
+            year=row.get("year"),
+            tags=[],
+            publisher=publisher,
+            authors=[],
+            publication_place=row.get("publication_place"),
+            isbn=row.get("isbn"),
+            edition=row.get("edition"),
+            created_at=row.get("doc_created_at")
+        )
+
 
 @dataclass(kw_only=True)
 class Paper(Document):
@@ -97,15 +150,6 @@ class Paper(Document):
     issue: str | None
     pages: str | None
     doi: str | None
-
-    def __str__(self):
-        return (
-            f"{self.title}\n"
-            f"{self.journal}\n"
-            f"{'; '.join([str(author) for author in self.authors])}\n"
-            f"{self.year}\n"
-            f"{self.doi}\n"
-        )
 
     @classmethod
     def from_raw_data(self, data: dict) -> Self:
@@ -120,7 +164,7 @@ class Paper(Document):
         return Paper(
             title=data.get("title"),
             language=data.get("language"),
-            year=data.get("issued").get("date-parts")[0][0],
+            year=int(data.get("issued").get("date-parts")[0][0]),
             tags=[],
             publisher=publisher,
             authors=authors,

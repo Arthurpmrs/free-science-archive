@@ -1,0 +1,533 @@
+[
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/4SX9E3JG",
+		"type": "book",
+		"collection-title": "Texts in Computer Science",
+		"event-place": "Cham",
+		"ISBN": "978-3-030-54255-9",
+		"language": "en",
+		"note": "DOI: 10.1007/978-3-030-54256-6",
+		"publisher": {
+			"name": "Springer International Publishing",
+			"url": "https://www.springer.com/gp"
+		},
+		"publisher-place": "Cham",
+		"source": "DOI.org (Crossref)",
+		"title": "The Algorithm Design Manual",
+		"URL": "http://link.springer.com/10.1007/978-3-030-54256-6",
+		"author": [
+			{
+				"family": "Skiena",
+				"given": "Steven S."
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2023",
+					6,
+					1
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2020"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/VVWSEMIK",
+		"type": "book",
+		"abstract": "\"The leading introductory textbook and reference on algorithms\"--",
+		"call-number": "QA76.6 .C662 2022",
+		"edition": "Fourth edition",
+		"event-place": "Cambridge, Massachusett",
+		"ISBN": "978-0-262-04630-5",
+		"number-of-pages": "1291",
+		"publisher": {
+			"name": "The MIT Press",
+			"url": "https://mitpress.mit.edu/"
+		},
+		"publisher-place": "Cambridge, Massachusett",
+		"source": "Library of Congress ISBN",
+		"title": "Introduction to algorithms",
+		"author": [
+			{
+				"family": "Cormen",
+				"given": "Thomas H."
+			},
+			{
+				"family": "Leiserson",
+				"given": "Charles Eric"
+			},
+			{
+				"family": "Rivest",
+				"given": "Ronald L."
+			},
+			{
+				"family": "Stein",
+				"given": "Clifford"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2022"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/UNMVNI4E",
+		"type": "book",
+		"call-number": "QA76.73.C153 D76 2013",
+		"edition": "Fourth edition",
+		"event-place": "Boston, MA",
+		"ISBN": "978-1-133-60842-4",
+		"language": "en",
+		"number-of-pages": "792",
+		"publisher": {
+			"name": "Cengage Learning",
+			"url": "https://www.cengage.com.br/"
+		},
+		"publisher-place": "Boston, MA",
+		"source": "Library of Congress ISBN",
+		"title": "Data structures and algorithms in C++",
+		"author": [
+			{
+				"family": "Drozdek",
+				"given": "Adam"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2013"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/F86LMKEI",
+		"type": "book",
+		"call-number": "QA76.9.D26 T45 2011",
+		"collection-title": "The Morgan Kaufmann series in data management systems",
+		"edition": "5th",
+		"event-place": "Amsterdam : Burlington, MA",
+		"ISBN": "978-0-12-382020-4",
+		"language": "en",
+		"note": "OCLC: ocn692291799",
+		"number-of-pages": "304",
+		"publisher": {
+			"name": "Elsevier",
+			"url": "https://www.elsevier.com/pt-br"
+		},
+		"publisher-place": "Amsterdam : Burlington, MA",
+		"source": "Library of Congress ISBN",
+		"title": "Database modeling and design: logical design",
+		"title-short": "Database modeling and design",
+		"author": [
+			{
+				"family": "Teorey",
+				"given": "Toby J."
+			},
+			{
+				"family": "Lightstone",
+				"given": "Sam"
+			},
+			{
+				"family": "Nadeau",
+				"given": "Tom"
+			},
+			{
+				"family": "Jagadish",
+				"given": "H. V."
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2011"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/3PSEZXFM",
+		"type": "book",
+		"call-number": "QA76.758 .F682 2019",
+		"collection-title": "Addison-Wesley signature series",
+		"edition": "Second edition",
+		"event-place": "Boston",
+		"ISBN": "978-0-13-475759-9",
+		"note": "OCLC: on1064139838",
+		"number-of-pages": "418",
+		"publisher": {
+			"name": "Addison-Wesley",
+			"url": "https://www.oreilly.com/publisher/addison-wesley-professional/"
+		},
+		"publisher-place": "Boston",
+		"source": "Library of Congress ISBN",
+		"title": "Refactoring: improving the design of existing code",
+		"title-short": "Refactoring",
+		"author": [
+			{
+				"family": "Fowler",
+				"given": "Martin"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2019"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/DP38Z5HS",
+		"type": "book",
+		"abstract": "Includes instructions for basic concepts such as variables, lists, classes, and loops. Practice exercises come with each topic. The end goal is the creation of a Space Invaders-inspired arcade game to deploy online",
+		"edition": "3rd edition",
+		"event-place": "San Francisco",
+		"ISBN": "978-1-71850-270-3",
+		"language": "eng",
+		"number-of-pages": "514",
+		"publisher": {
+			"name": "No Starch Press",
+			"url": "https://nostarch.com/"
+		},
+		"publisher-place": "San Francisco",
+		"source": "K10plus ISBN",
+		"title": "Python crash course: a hands-on, project-based introduction to programming",
+		"title-short": "Python crash course",
+		"author": [
+			{
+				"family": "Matthes",
+				"given": "Eric"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2023"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/7LHZNT6V",
+		"type": "book",
+		"call-number": "QA76.73.P98 R36 2022",
+		"edition": "Second edition",
+		"event-place": "Beijing [China] ; Boston [MA]",
+		"ISBN": "978-1-4920-5635-5",
+		"number-of-pages": "983",
+		"publisher": {
+			"name": "O'Reilly",
+			"url": "https://www.oreilly.com/"
+		},
+		"publisher-place": "Beijing [China] ; Boston [MA]",
+		"source": "Library of Congress ISBN",
+		"title": "Fluent Python: clear, concise, and effective programming",
+		"title-short": "Fluent Python",
+		"author": [
+			{
+				"family": "Ramalho",
+				"given": "Luciano"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2022"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/PI3EC2DM",
+		"type": "book",
+		"call-number": "QA76.6 .T38 2013",
+		"edition": "6th ed",
+		"event-place": "Boston",
+		"ISBN": "978-0-13-291652-3",
+		"number-of-pages": "775",
+		"publisher": {
+			"name": "Pearson",
+			"url": "https://br.pearson.com/"
+		},
+		"publisher-place": "Boston",
+		"source": "Library of Congress ISBN",
+		"title": "Structured computer organization",
+		"author": [
+			{
+				"family": "Tanenbaum",
+				"given": "Andrew S."
+			},
+			{
+				"family": "Austin",
+				"given": "Todd"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2013"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/EWD8ZX4S",
+		"type": "book",
+		"call-number": "QA76.64 .D47 1995",
+		"collection-title": "Addison-Wesley professional computing series",
+		"event-place": "Reading, Mass",
+		"ISBN": "978-0-201-63361-0",
+		"number-of-pages": "395",
+		"publisher": {
+			"name": "Addison-Wesley",
+			"url": "https://www.oreilly.com/publisher/addison-wesley-professional/"
+		},
+		"publisher-place": "Reading, Mass",
+		"source": "Library of Congress ISBN",
+		"title": "Design patterns: elements of reusable object-oriented software",
+		"title-short": "Design patterns",
+		"author": [
+			{
+				"family": "Gamma",
+				"given": "Erich"
+			},
+			{
+				"family": "Helm",
+				"given": "Richard"
+			},
+			{
+				"family": "Johnson",
+				"given": "Ralph"
+			},
+			{
+				"family": "Vlissides",
+				"given": "John"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1995"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/5AFKE2E5",
+		"type": "book",
+		"abstract": "\"This book introduces the fundamental concepts necessary for designing, using, and implementing database systems and database applications. Our presentation stresses the fundamentals of database modeling and design, the languages and models provided by the database management systems, and database system implementation techniques\"--Page vii",
+		"call-number": "QA76.9.D3 E57 2016",
+		"edition": "Seventh edition",
+		"event-place": "Hoboken, NJ",
+		"ISBN": "978-0-13-397077-7",
+		"note": "OCLC: ocn913842106",
+		"number-of-pages": "1242",
+		"publisher": {
+			"name": "Pearson",
+			"url": "https://br.pearson.com/"
+		},
+		"publisher-place": "Hoboken, NJ",
+		"source": "Library of Congress ISBN",
+		"title": "Fundamentals of database systems",
+		"author": [
+			{
+				"family": "Elmasri",
+				"given": "Ramez"
+			},
+			{
+				"family": "Navathe",
+				"given": "Sham"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2016"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/39KZMYLB",
+		"type": "book",
+		"abstract": "A comunidade de desenvolvimento de softwares reconhece que a modelagem de domínios é fundamental para o design de softwares. Através de modelos de domínios, os desenvolvedores de software conseguem expressar valiosas funcionalidades e traduzi-las em uma implementação de software que realmente atenda às necessidades de seus usuários. Mas, apesar de sua óbvia importância, existem poucos recursos práticos que explicam como incorporar uma modelagem de domínios eficiente no processo de desenvolvimento de softwares.O Domain-Driven Design atende essa necessidade. Este não é um livro sobre tecnologias específicas. Ele oferece aos leitores uma abordagem sistemática com relação ao domain-driven design, ou DDD, apresentando um conjunto abrangente de práticas ideais de design, técnicas baseadas em experiências e princípios fundamentais que facilitam o desenvolvimento de projetos de software que enfrentam domínios complexos. Reunindo práticas de design e implementação, este livro incorpora vários exemplos baseados em projetos que ilustram a aplicação do design dirigido por domínios no desenvolvimento de softwares na vida real. Com este livro em mãos, desenvolvedores orientados a objetos, analistas de sistema e designers terão a orientação de que precisam para organizar e concentrar seu trabalho, criar modelos de domínio valiosos e úteis, e transformar esses modelos em implementações de software duradouras e de alta qualidade.",
+		"edition": "3ª edição",
+		"ISBN": "978-85-508-0065-3",
+		"language": "Português",
+		"publisher": {
+			"name": "Alta Books",
+			"url": "https://altabooks.com.br/"
+		},
+		"source": "Amazon",
+		"title": "Domain-Driven Design: Atacando as complexidades no coração do software",
+		"title-short": "Domain-Driven Design",
+		"author": [
+			{
+				"family": "Evans",
+				"given": "Eric"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2016"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/NREC2QCD",
+		"type": "book",
+		"collection-title": "The Addison-Wesley Signature Series",
+		"edition": "Nineteenth printing",
+		"event-place": "Boston San Francisco New York Toronto Montreal London Munich Paris Madrid Capetown",
+		"ISBN": "978-0-321-12742-6",
+		"language": "eng",
+		"number-of-pages": "533",
+		"publisher": {
+			"name": "Addison-Wesley",
+			"url": "https://www.oreilly.com/publisher/addison-wesley-professional/"
+		},
+		"publisher-place": "Boston San Francisco New York Toronto Montreal London Munich Paris Madrid Capetown",
+		"source": "K10plus ISBN",
+		"title": "Patterns of enterprise application architecture",
+		"author": [
+			{
+				"family": "Fowler",
+				"given": "Martin"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2013"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/6JLPFL2P",
+		"type": "book",
+		"call-number": "QA76.76.T48 W475 2012",
+		"event-place": "Upper Saddle River, NJ",
+		"ISBN": "978-0-321-80302-3",
+		"number-of-pages": "281",
+		"publisher": {
+			"name": "Addison-Wesley",
+			"url": "https://www.oreilly.com/publisher/addison-wesley-professional/"
+		},
+		"publisher-place": "Upper Saddle River, NJ",
+		"source": "Library of Congress ISBN",
+		"title": "How Google tests software",
+		"author": [
+			{
+				"family": "Whittaker",
+				"given": "James A."
+			},
+			{
+				"family": "Arbon",
+				"given": "Jason"
+			},
+			{
+				"family": "Carollo",
+				"given": "Jeff"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2012"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/KL87YX8P",
+		"type": "book",
+		"call-number": "QA76.76.P37 M49 2007",
+		"collection-title": "The Addison-Wesley signature series",
+		"event-place": "Upper Saddle River, NJ",
+		"ISBN": "978-0-13-149505-0",
+		"note": "OCLC: ocm77821686",
+		"number-of-pages": "883",
+		"publisher": {
+			"name": "Addison-Wesley",
+			"url": "https://www.oreilly.com/publisher/addison-wesley-professional/"
+		},
+		"publisher-place": "Upper Saddle River, NJ",
+		"source": "Library of Congress ISBN",
+		"title": "xUnit test patterns: refactoring test code",
+		"title-short": "xUnit test patterns",
+		"author": [
+			{
+				"family": "Meszaros",
+				"given": "Gerard"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2007"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/local/1zHodGHj/items/7EYKMHSM",
+		"type": "book",
+		"collection-title": "SpringerBriefs in Computer Science",
+		"event-place": "Cham",
+		"ISBN": "978-3-319-11492-7",
+		"language": "en",
+		"note": "DOI: 10.1007/978-3-319-11493-4",
+		"publisher": {
+			"name": "Springer International Publishing",
+			"url": "https://www.springer.com/gp"
+		},
+		"publisher-place": "Cham",
+		"source": "DOI.org (Crossref)",
+		"title": "Emergent Interfaces for Feature Modularization",
+		"URL": "https://link.springer.com/10.1007/978-3-319-11493-4",
+		"author": [
+			{
+				"family": "Ribeiro",
+				"given": "Márcio"
+			},
+			{
+				"family": "Borba",
+				"given": "Paulo"
+			},
+			{
+				"family": "Brabrand",
+				"given": "Claus"
+			}
+		],
+		"accessed": {
+			"date-parts": [
+				[
+					"2023",
+					9,
+					22
+				]
+			]
+		},
+		"issued": {
+			"date-parts": [
+				[
+					"2014"
+				]
+			]
+		}
+	}
+]

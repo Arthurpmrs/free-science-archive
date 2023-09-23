@@ -37,6 +37,7 @@ class DatabaseConnector:
                         year INTEGER,
                         publisher_id INTEGER,
                         created_at DATE,
+                        type TEXT CHECK(type IN ('book', 'paper')),
                         UNIQUE(title, year)
                         FOREIGN KEY (publisher_id) REFERENCES Publisher (publisher_id)
                         )""")
