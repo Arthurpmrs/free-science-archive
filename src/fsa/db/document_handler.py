@@ -298,11 +298,87 @@ class DocumentHandler:
 
         return papers
 
+    def get_author_by_id(self, author_id: int) -> Author:
+        """Get an author by its id"""
+
+        cur = self.con.cursor()
+
+        rows = cur.execute("""
+                        SELECT * FROM Author
+                        WHERE author_id = ?
+                        """, (author_id,))
+
+        author = Author.from_db_row(dict(rows.fetchone()))
+
+        docs = cur.execute("""
+                           SELECT Document.document_id FROM Document
+                           INNER JOIN Writes
+                                ON Writes.document_id = Document.document_id 
+                                AND Writes.author_id = ?
+                            """, (author_id,))
+
+        for doc in docs:
+            author.document_ids.append(doc["document_id"])
+
+        return author
+
+    def get_publisher_by_id(self, publisher_id: int) -> Publisher:
+        """Get a publisher by its id"""
+
+        cur = self.con.cursor()
+
+        rows = cur.execute("""
+                        SELECT * FROM Publisher
+                        WHERE publisher_id = ?
+                        """, (publisher_id,))
+
+        publisher = Publisher.from_db_row(dict(rows.fetchone()))
+
+        docs = cur.execute("""
+                           SELECT Document.document_id FROM Document
+                           WHERE Document.publisher_id = ?
+                           """, (publisher_id,))
+
+        for doc in docs:
+            publisher.document_ids.append(doc["document_id"])
+
+        return publisher
+
     def update_publisher(self, publisher: Publisher) -> None:
-        pass
+        """Update a publisher"""
+
+        cur = self.con.cursor()
+
+        try:
+            cur.execute("""
+                        UPDATE Publisher
+                        SET name = ?, address = ?, url = ?
+                        WHERE publisher_id = ?
+                        """, (publisher.name, publisher.address,
+                              publisher.url, publisher.publisher_id))
+        except sqlite3.IntegrityError:
+            print("This Publisher does not exist.")
+
+        self.con.commit()
 
     def update_author(self, author: Author) -> None:
-        pass
+        """Update an author"""
+
+        cur = self.con.cursor()
+
+        try:
+            cur.execute("""
+                        UPDATE Author
+                        SET last_name = ?, remaining_name = ?, birth_date = ?,
+                        email = ?, social_url = ?, nationality = ?
+                        WHERE author_id = ?
+                        """, (author.last_name, author.remaining_name,
+                              author.birth_date, author.email, author.social_url,
+                              author.nationality, author.author_id))
+        except sqlite3.integrityError:
+            print("This Author does not exist.")
+
+        self.con.commit()
 
     def update_book(self, book: Book) -> None:
         pass

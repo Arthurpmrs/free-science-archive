@@ -148,9 +148,23 @@ def test_query_3():
         # documents = handler.get_documents_by_author("Ribeiro")
         # documents = handler.get_documents_by_publisher("Elsevier")
         # documents = handler.get_books()
-        documents = handler.get_papers()
-        for document in documents:
-            print(document.title)
+        # documents = handler.get_papers()
+        # for document in documents:
+        #     print(document.title)
+
+        # author = handler.get_author_by_id(26)
+        # print(author)
+        # author.email = "marcio@ic.ufal.br"
+        # author.social_url = "@gabarito"
+        # print(author)
+        # handler.update_author(author)
+        publisher = handler.get_publisher_by_id(15)
+        print(publisher)
+        publisher.address = "Rua Juquinha, 1255"
+        print(publisher)
+        handler.update_publisher(publisher)
+        publisher = handler.get_publisher_by_id(15)
+        print(publisher)
 
 
 if __name__ == "__main__":
