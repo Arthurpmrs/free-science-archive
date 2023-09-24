@@ -158,13 +158,26 @@ def test_query_3():
         # author.social_url = "@gabarito"
         # print(author)
         # handler.update_author(author)
-        publisher = handler.get_publisher_by_id(15)
-        print(publisher)
-        publisher.address = "Rua Juquinha, 1255"
-        print(publisher)
-        handler.update_publisher(publisher)
-        publisher = handler.get_publisher_by_id(15)
-        print(publisher)
+        # publisher = handler.get_publisher_by_id(15)
+        # print(publisher)
+        # publisher.address = "Rua Juquinha, 1255"
+        # print(publisher)
+        # handler.update_publisher(publisher)
+        # publisher = handler.get_publisher_by_id(15)
+        # print(publisher)
+        # book = handler.get_book_by_id(21)
+        # book = handler.get_book_by_id(21)
+        # print(book)
+        # book.publication_place = "Boca Raton"
+        # print(" ")
+        # handler.update_document(book)
+        # book = handler.get_book_by_id(21)
+        # print(book)
+        paper = handler.get_paper_by_id(6)
+        paper.pages = "1-10"
+        paper.doi = "10.1016/j.jss.2000.1x11x1"
+        print(paper)
+        handler.update_document(paper)
 
 
 if __name__ == "__main__":

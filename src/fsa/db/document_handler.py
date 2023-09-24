@@ -163,7 +163,7 @@ class DocumentHandler:
 
         return document_id
 
-    def update_document_publisher(self, document_id: int, publisher_id: int) -> None:
+    def set_document_publisher(self, document_id: int, publisher_id: int) -> None:
         """Update the publisher of a document"""
 
         cur = self.con.cursor()
@@ -210,7 +210,11 @@ class DocumentHandler:
                             FROM Document
                         INNER JOIN Publisher
                             ON Document.publisher_id = Publisher.publisher_id
-                        WHERE document_id = ?
+                            AND Document.document_id = ?
+                        LEFT JOIN Book
+                            ON Document.document_id = Book.document_id
+                        LEFT JOIN Paper
+                            ON Document.document_id = Paper.document_id
                         """, (document_id,))
 
         data = dict(rows.fetchone())
@@ -266,6 +270,15 @@ class DocumentHandler:
             documents.append(document)
         return documents
 
+    def get_book_by_id(self, document_id: int) -> Book:
+        """Get a book by its id"""
+
+        document = self.get_document_by_id(document_id)
+        if isinstance(document, Book):
+            return document
+        else:
+            raise ValueError("This document is not a book.")
+
     def get_books(self) -> list[Book]:
         """Get all books"""
 
@@ -282,7 +295,7 @@ class DocumentHandler:
 
         return books
 
-    def get_papers(self):
+    def get_papers(self) -> list[Paper]:
         """Get all papers"""
 
         rows = self.con.execute("""
@@ -297,6 +310,15 @@ class DocumentHandler:
             papers.append(self.get_document_by_id(row["document_id"]))
 
         return papers
+
+    def get_paper_by_id(self, document_id: int) -> Paper:
+        """Get a paper by its id"""
+
+        document = self.get_document_by_id(document_id)
+        if isinstance(document, Paper):
+            return document
+        else:
+            raise ValueError("This document is not a paper.")
 
     def get_author_by_id(self, author_id: int) -> Author:
         """Get an author by its id"""
@@ -380,11 +402,49 @@ class DocumentHandler:
 
         self.con.commit()
 
-    def update_book(self, book: Book) -> None:
-        pass
+    def update_document(self, document: Document) -> None:
+        """Update a document"""
 
-    def update_paper(self, paper: Paper) -> None:
-        pass
+        cur = self.con.cursor()
+
+        try:
+            cur.execute("""
+                        UPDATE Document
+                        SET title = ?, language = ?, year = ?
+                        WHERE document_id = ?
+                        """, (document.title, document.language,
+                              document.year, document.document_id))
+        except sqlite3.IntegrityError:
+            print("This Document does not exist.")
+            return None
+
+        if isinstance(document, Book):
+            try:
+                cur.execute("""
+                            UPDATE Book
+                            SET isbn = ?, edition = ?, publication_place = ?
+                            WHERE document_id = ?
+                            """, (document.isbn, document.edition,
+                                  document.publication_place,
+                                  document.document_id))
+            except sqlite3.IntegrityError:
+                print("This Book does not exist.")
+                return None
+        else:
+            try:
+                cur.execute("""
+                            UPDATE Paper
+                            SET doi = ?, journal = ?, issue = ?, pages = ?,
+                            volume = ?
+                            WHERE document_id = ?
+                            """, (document.doi, document.journal,
+                                  document.issue, document.pages,
+                                  document.volume, document.document_id))
+            except sqlite3.IntegrityError:
+                print("This Paper does not exist.")
+                return None
+
+        self.con.commit()
 
     def delete_publisher(self, publisher_id: int) -> None:
         pass
