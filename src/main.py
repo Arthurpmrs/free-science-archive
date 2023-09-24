@@ -173,14 +173,23 @@ def test_query_3():
         # handler.update_document(book)
         # book = handler.get_book_by_id(21)
         # print(book)
-        paper = handler.get_paper_by_id(6)
-        paper.pages = "1-10"
-        paper.doi = "10.1016/j.jss.2000.1x11x1"
-        print(paper)
-        handler.update_document(paper)
+        # paper = handler.get_paper_by_id(6)
+        # paper.pages = "1-10"
+        # paper.doi = "10.1016/j.jss.2000.1x11x1"
+        # print(paper)
+        # handler.update_document(paper)
+        # handler.delete_publisher(7)
+
+
+def test_query_4():
+    with DatabaseConnector() as con:
+        handler = DocumentHandler(con)
+        # handler.delete_author(41)
+        # print(handler.get_document_by_id(16))
+        handler.delete_document(2)
 
 
 if __name__ == "__main__":
     # populate_papers()
     # populate_books()
-    test_query_3()
+    test_query_4()

@@ -14,9 +14,9 @@ Database course project.
 -   [x] Buscar todos os Documentos (Papers/Books) de uma Publisher
 -   [x] Buscar todos os Books
 -   [x] Buscar todos os Papers
--   [ ] Editar um Document/Paper/Book
--   [ ] Editar um Author
--   [ ] Editar uma Publisher
--   [ ] Deletar um Document/Paper/Book
--   [ ] Deletar um Author
--   [ ] Deletar uma Publisher
+-   [x] Editar um Document/Paper/Book
+-   [x] Editar um Author
+-   [x] Editar uma Publisher
+-   [x] Deletar um Document/Paper/Book
+-   [x] Deletar um Author
+-   [x] Deletar uma Publisher

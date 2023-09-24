@@ -21,7 +21,7 @@ class DatabaseConnector:
     @staticmethod
     def create_tables(con) -> None:
         cur = con.cursor()
-
+        con.execute("PRAGMA foreign_keys = 1")
         cur.execute("""CREATE TABLE IF NOT EXISTS Publisher (
                         publisher_id INTEGER PRIMARY KEY,
                         name TEXT NOT NULL UNIQUE,
@@ -40,6 +40,7 @@ class DatabaseConnector:
                         type TEXT CHECK(type IN ('book', 'paper')),
                         UNIQUE(title, year)
                         FOREIGN KEY (publisher_id) REFERENCES Publisher (publisher_id)
+                            ON DELETE SET NULL
                         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Book (
@@ -47,7 +48,7 @@ class DatabaseConnector:
                         isbn TEXT UNIQUE,
                         edition TEXT,
                         publication_place TEXT,
-                        FOREIGN KEY (document_id) REFERENCES Publisher (document_id)
+                        FOREIGN KEY (document_id) REFERENCES Document (document_id)
                         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Paper (
@@ -57,7 +58,7 @@ class DatabaseConnector:
                         issue TEXT,
                         pages TEXT,
                         volume TEXT,
-                        FOREIGN KEY (document_id) REFERENCES Publisher (document_id)
+                        FOREIGN KEY (document_id) REFERENCES Document (document_id)
                         )""")
 
         cur.execute("""CREATE TABLE IF NOT EXISTS Author (

@@ -1,4 +1,5 @@
 import sqlite3
+import traceback
 from ..domain import Paper, Author, Publisher, Book, Document
 
 Cursor = sqlite3.Cursor
@@ -447,13 +448,84 @@ class DocumentHandler:
         self.con.commit()
 
     def delete_publisher(self, publisher_id: int) -> None:
-        pass
+        """Delete a publisher"""
+
+        self.con.isolation_level = None
+        try:
+            cur = self.con.cursor()
+            cur.execute("BEGIN")
+
+            cur.execute("""
+                        DELETE FROM Publisher
+                        WHERE publisher_id = ?
+                        """, (publisher_id,))
+
+            self.con.commit()
+        except sqlite3.Error:
+            print("Something went wrong. Transaction cancelled")
+            print(traceback.format_exc())
+            self.con.rollback()
 
     def delete_author(self, author_id: int) -> None:
-        pass
+        """Delete an author"""
 
-    def delete_book(self, document_id: int) -> None:
-        pass
+        self.con.isolation_level = None
+        try:
+            cur = self.con.cursor()
+            cur.execute("BEGIN")
 
-    def delete_paper(self, document_id: int) -> None:
-        pass
+            cur.execute("""
+                        DELETE FROM Writes
+                        WHERE author_id = ?
+                        """, (author_id, ))
+
+            cur.execute("""
+                        DELETE FROM Author
+                        WHERE author_id = ?
+                        """, (author_id,))
+
+            self.con.commit()
+        except sqlite3.Error:
+            print("Something went wrong. Transaction cancelled")
+            print(traceback.format_exc())
+            self.con.rollback()
+
+    def delete_document(self, document_id: int) -> None:
+        """Delete a document"""
+
+        self.con.isolation_level = None
+        try:
+            cur = self.con.cursor()
+            cur.execute("BEGIN")
+            is_books = True
+            rows = cur.execute("""
+                               SELECT document_id from Book
+                               WHERE document_id = ?
+                               """, (document_id, ))
+
+            is_book = False if not rows.fetchone() else True
+
+            if is_book:
+                table = "Book"
+            else:
+                table = "Paper"
+
+            subtype_del_query = f"DELETE FROM {table} WHERE document_id = ?"
+            cur.execute(subtype_del_query, (document_id, ))
+
+            cur.execute("""
+                        DELETE FROM Writes
+                        WHERE document_id = ?
+                        """, (document_id, ))
+
+            cur.execute("""
+                        DELETE FROM Document
+                        WHERE document_id = ?
+                        """, (document_id, ))
+
+            self.con.commit()
+
+        except sqlite3.Error:
+            print(traceback.format_exc())
+            print("Something went Wrong. Transaction Cancelled.")
+            self.con.rollback()
