@@ -1,14 +1,34 @@
 import sqlite3
 import traceback
-from ..domain import Paper, Author, Publisher, Book, Document
+from ..domain import Paper, Author, Publisher, Book, Document, User
 
 Cursor = sqlite3.Cursor
 
 
-class DocumentHandler:
+class DBHandler:
 
     def __init__(self, con):
         self.con = con
+
+    def insert_user(self, user: User) -> int:
+        """Insert a new user into the database"""
+
+        cur = self.con.cursor()
+
+        cur.execute("""
+                    INSERT OR IGNORE INTO User
+                    VALUES(:user_id, :username, :password, :email, 
+                    :date_joined)
+                    """, user.get_parsed_dict())
+
+        self.con.commit()
+
+        res = cur.execute("""
+                        SELECT user_id FROM User
+                        WHERE username = ?
+                        """, (user.username,))
+
+        return res.fetchone()[0]
 
     def insert_publisher(self, publisher: Publisher) -> int:
         """Insert a new publisher into the database"""
@@ -72,16 +92,17 @@ class DocumentHandler:
             print("This author is already linked to this document.")
 
     def _insert_document(self, parsed_document: dict, type: str,
-                         cur: Cursor) -> tuple[bool, int]:
+                         user_id: int, cur: Cursor) -> tuple[bool, int]:
         """Insert a new document into the database"""
 
         parsed_document.update({"type": type})
+        parsed_document.update({"user_id": user_id})
 
         try:
             cur.execute("""
                         INSERT INTO Document
                         VALUES(:document_id, :title, :language, :year, 
-                        :publisher_id, :created_at, :type)
+                        :publisher_id, :created_at, :type, :user_id)
                         """, parsed_document)
 
             document_id = cur.lastrowid
@@ -100,7 +121,7 @@ class DocumentHandler:
 
         return success, document_id
 
-    def insert_paper(self, paper: Paper) -> int:
+    def insert_paper(self, paper: Paper, user_id: int) -> int:
         """Insert a new paper into the database"""
 
         publisher_id = self.insert_publisher(paper.publisher)
@@ -112,7 +133,7 @@ class DocumentHandler:
         cur = self.con.cursor()
         cur.execute("BEGIN")
         success, document_id = self._insert_document(
-            parsed_paper, "paper", cur)
+            parsed_paper, "paper", user_id, cur)
 
         if not success:
             return document_id
@@ -133,7 +154,7 @@ class DocumentHandler:
 
         return document_id
 
-    def insert_book(self, book: Book) -> int:
+    def insert_book(self, book: Book, user_id: int) -> int:
         """Insert a new book into the database"""
 
         publisher_id = self.insert_publisher(book.publisher)
@@ -144,7 +165,8 @@ class DocumentHandler:
         self.con.isolation_level = None
         cur = self.con.cursor()
         cur.execute("BEGIN")
-        success, document_id = self._insert_document(parsed_book, "book", cur)
+        success, document_id = self._insert_document(
+            parsed_book, "book", user_id, cur)
 
         if not success:
             return document_id
@@ -179,6 +201,18 @@ class DocumentHandler:
             print("This Document does not exist.")
 
         self.con.commit()
+
+    def get_user_by_username(self, username: str) -> User:
+        """Get a user by its username"""
+
+        cur = self.con.cursor()
+
+        rows = cur.execute("""
+                        SELECT * FROM User
+                        WHERE username = ?
+                        """, (username,))
+
+        return User.from_db_row(dict(rows.fetchone()))
 
     def _get_document_authors(self, document_id: int) -> list[Author]:
         """Get all authors of a document"""
@@ -367,6 +401,23 @@ class DocumentHandler:
 
         return publisher
 
+    def update_user(self, user: User) -> None:
+        """Update a user"""
+
+        cur = self.con.cursor()
+
+        try:
+            cur.execute("""
+                        UPDATE User
+                        SET username = ?, password = ?, email = ?
+                        WHERE user_id = ?
+                        """, (user.username, user.password,
+                              user.email, user.user_id))
+        except sqlite3.IntegrityError:
+            print("This User does not exist.")
+
+        self.con.commit()
+
     def update_publisher(self, publisher: Publisher) -> None:
         """Update a publisher"""
 
@@ -446,6 +497,22 @@ class DocumentHandler:
                 return None
 
         self.con.commit()
+
+    def delete_user(self, user_id: int) -> None:
+        """Delete a user"""
+
+        cur = self.con.cursor()
+
+        try:
+            cur.execute("""
+                        DELETE FROM User
+                        WHERE user_id = ?
+                        """, (user_id,))
+
+            self.con.commit()
+        except sqlite3.Error:
+            print("Something went wrong.")
+            print(traceback.format_exc())
 
     def delete_publisher(self, publisher_id: int) -> None:
         """Delete a publisher"""

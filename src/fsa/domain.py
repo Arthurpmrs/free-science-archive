@@ -4,11 +4,41 @@ from dataclasses import dataclass, asdict
 
 
 @dataclass(kw_only=True)
+class User:
+    user_id: int | None = None
+    username: str
+    password: str
+    email: str
+    date_joined: datetime = datetime.now()
+
+    def get_parsed_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_raw_data(cls, data: dict) -> Self:
+        return User(
+            username=data.get("username"),
+            password=data.get("password"),
+            email=data.get("email")
+        )
+
+    @classmethod
+    def from_db_row(cls, row: dict) -> Self:
+        return User(
+            user_id=row.get("user_id"),
+            username=row.get("username"),
+            password=row.get("password"),
+            email=row.get("email"),
+            date_joined=row.get("date_joined")
+        )
+
+
+@dataclass(kw_only=True)
 class Publisher:
     publisher_id: int | None = None
     name: str
-    address: str
-    url: str
+    address: str | None = None
+    url: str | None = None
     document_ids: list[int] | None = None
     created_at: datetime = datetime.now()
 
@@ -16,23 +46,23 @@ class Publisher:
         return asdict(self)
 
     @classmethod
-    def from_raw_data(self, data: dict) -> Self:
+    def from_raw_data(cls, data: dict) -> Self:
         return Publisher(
-            name=data.get("name"),
+            name=data.get("name", ""),
             address=data.get("address"),
             url=data.get("url"),
             document_ids=[],
         )
 
     @classmethod
-    def from_db_row(self, row: dict) -> Self:
+    def from_db_row(cls, row: dict) -> Self:
         return Publisher(
             publisher_id=row.get("publisher_id"),
-            name=row.get("name"),
+            name=row.get("name", ""),
             address=row.get("address"),
             url=row.get("url"),
             document_ids=[],
-            created_at=row.get("pub_created_at")
+            created_at=row.get("pub_created_at", datetime.now())
         )
 
 
@@ -52,7 +82,7 @@ class Author:
         return asdict(self)
 
     @classmethod
-    def from_raw_data(self, data: dict) -> Self:
+    def from_raw_data(cls, data: dict) -> Self:
         return Author(
             author_id=None,
             remaining_name=data.get("given"),
@@ -65,7 +95,7 @@ class Author:
         )
 
     @classmethod
-    def from_db_row(self, row: dict) -> Self:
+    def from_db_row(cls, row: dict) -> Self:
         return Author(
             author_id=row.get("author_id"),
             remaining_name=row.get("remaining_name"),

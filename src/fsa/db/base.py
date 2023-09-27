@@ -30,6 +30,14 @@ class DatabaseConnector:
                         created_at DATE
                         )""")
 
+        cur.execute("""CREATE TABLE IF NOT EXISTS User (
+                        user_id INTEGER PRIMARY KEY,
+                        username TEXT NOT NULL UNIQUE,
+                        password TEXT NOT NULL,
+                        email TEXT NOT NULL UNIQUE,
+                        date_joined DATE
+                        )""")
+
         cur.execute("""CREATE TABLE IF NOT EXISTS Document (
                         document_id INTEGER PRIMARY KEY,
                         title TEXT NOT NULL,
@@ -38,8 +46,11 @@ class DatabaseConnector:
                         publisher_id INTEGER,
                         created_at DATE,
                         type TEXT CHECK(type IN ('book', 'paper')),
+                        user_id INTEGER,
                         UNIQUE(title, year)
                         FOREIGN KEY (publisher_id) REFERENCES Publisher (publisher_id)
+                            ON DELETE SET NULL
+                        FOREIGN KEY (user_id) REFERENCES User (user_id)
                             ON DELETE SET NULL
                         )""")
 

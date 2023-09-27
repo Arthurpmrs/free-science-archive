@@ -1,25 +1,24 @@
 import json
-from datetime import datetime
 from fsa.db.base import DatabaseConnector
-from fsa.db.document_handler import DocumentHandler
-from fsa.domain import Publisher, Book, Paper, Author
+from fsa.db.handler import DBHandler
+from fsa.domain import Publisher, Book, Paper, Author, User
 
 
-def populate_papers():
-    papers = []
-    with open("src/fakedata/papers.json", "r") as file:
-        raw_papers = json.load(file)
+def add_admin():
+    user = User(
+        username="admin",
+        password="admin",
+        email="admin@admin.com"
+    )
 
-        for raw_paper in raw_papers:
-            papers.append(Paper.from_raw_data(raw_paper))
+    with DatabaseConnector() as con:
+        handler = DBHandler(con)
+        admin_id = handler.insert_user(user)
 
-    for paper in papers:
-        with DatabaseConnector() as con:
-            handler = DocumentHandler(con)
-            handler.insert_paper(paper)
+    return admin_id
 
 
-def populate_books():
+def populate_books(user_id: int):
     books = []
     with open("src/fakedata/books.json", "r") as file:
         raw_books = json.load(file)
@@ -29,8 +28,88 @@ def populate_books():
     for book in books:
         print(f"{book.authors[0].last_name} - {book.title}")
         with DatabaseConnector() as con:
-            handler = DocumentHandler(con)
-            handler.insert_book(book)
+            handler = DBHandler(con)
+            handler.insert_book(book, user_id)
+
+
+def populate_papers(user_id: int):
+    papers = []
+    with open("src/fakedata/papers.json", "r") as file:
+        raw_papers = json.load(file)
+
+        for raw_paper in raw_papers:
+            papers.append(Paper.from_raw_data(raw_paper))
+
+    for paper in papers:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            handler.insert_paper(paper, user_id)
+
+
+class Application:
+
+    logged_user: User | None = None
+
+    def run(self) -> None:
+
+        while True:
+            print("1. Login")
+            print("2. Register")
+            print("98. Add Admin")
+            print("99. Populate database with fake data")
+            print("0. Exit")
+            option = input("Choose an option: ")
+
+            if option == "1":
+                self.login()
+            elif option == "2":
+                self.register()
+            elif option == "0":
+                break
+            elif option == "98":
+                add_admin()
+            elif option == "99":
+                self.populate_database()
+            else:
+                print("Invalid option. Try again.")
+
+    def login(self) -> None:
+        username = input("Username: ")
+        password = input("Password: ")
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            user = handler.get_user_by_username(username)
+
+            if user is None or user.password != password:
+                print("Invalid credentials.")
+            else:
+                self.logged_user = user
+                print("Logged in successfully.")
+
+    def register(self) -> None:
+        email = input("Email: ")
+        username = input("Username: ")
+        password = input("Password: ")
+
+        user = User(
+            username=username,
+            password=password,
+            email=email
+        )
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            handler.insert_user(user)
+            print("User registered successfully.")
+
+    def populate_database(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            admin = handler.get_user_by_username("admin")
+
+        populate_papers(admin.user_id)
+        populate_books(admin.user_id)
 
 
 def insert_standalone_authors():
@@ -64,7 +143,7 @@ def insert_standalone_authors():
     ]
 
     with DatabaseConnector() as con:
-        handler = DocumentHandler(con)
+        handler = DBHandler(con)
         for author in authors:
             print(author)
             handler.insert_author(author)
@@ -79,13 +158,13 @@ def insert_standalone_publisher():
     )
 
     with DatabaseConnector() as con:
-        handler = DocumentHandler(con)
+        handler = DBHandler(con)
         handler.insert_publisher(publisher)
 
 
 def update_document_publisher():
     with DatabaseConnector() as con:
-        handler = DocumentHandler(con)
+        handler = DBHandler(con)
         # 13 is the Book: Introduction do Algorithms on the database
         # 20 is the Publisher: Microsoft Press
         handler.update_document_publisher(13, 20)
@@ -142,7 +221,7 @@ def test_query_2():
 
 def test_query_3():
     with DatabaseConnector() as con:
-        handler = DocumentHandler(con)
+        handler = DBHandler(con)
         # document = handler.get_document_by_id(8)
         # print(document)
         # documents = handler.get_documents_by_author("Ribeiro")
@@ -183,13 +262,12 @@ def test_query_3():
 
 def test_query_4():
     with DatabaseConnector() as con:
-        handler = DocumentHandler(con)
+        handler = DBHandler(con)
         # handler.delete_author(41)
         # print(handler.get_document_by_id(16))
         handler.delete_document(2)
 
 
 if __name__ == "__main__":
-    # populate_papers()
-    # populate_books()
-    test_query_4()
+    app = Application()
+    app.run()
