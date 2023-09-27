@@ -16,19 +16,19 @@ Como o acervo é gerado pela comunidade, um Usuário é responsável por cadastr
 
 ## Modelo Lógico
 
-**Document**(<u>document_id</u>, title, language, year, created_at, type, (**FK**)<u>publisher_id</u>, (**FK**)<u>user_id</u>)
+**Document**(**document_id**, title, language, year, created_at, type, (**FK**)**publisher_id**, (**FK**)**user_id**)
 
-**Book**((**FK**)<u>document_id</u>, isbn, publication_place, edition)
+**Book**((**FK**)**document_id**, isbn, publication_place, edition)
 
-**Paper**((**FK**)<u>document_id</u>, doi, journal, issue, volume, pages)
+**Paper**((**FK**)**document_id**, doi, journal, issue, volume, pages)
 
-**Author**(<u>author_id</u>, last_name, remaining_names, birth_date, email,social_url, nationality, created_at)
+**Author**(**author_id**, last_name, remaining_names, birth_date, email,social_url, nationality, created_at)
 
-**Publisher**(<u>publisher_id</u>, name, address, url, created_at)
+**Publisher**(**publisher_id**, name, address, url, created_at)
 
-**Writes**((**FK**)<u>document_id</u>, (**FK**)<u>author_id</u>)
+**Writes**((**FK**)**document_id**, (**FK**)**author_id**)
 
-**User**(<u>user_id</u>, username, password, email, date_joined)
+**User**(**user_id**, username, password, email, date_joined)
 
 ## Dependências funcionais
 
@@ -53,7 +53,7 @@ document_id -> { publication_place, isbn, edition }
 
 ### Paper
 
-document_id -> { doi, volume, issue, journal, paages }
+document_id -> { doi, volume, issue, journal, pages }
 
 ### Publisher
 
