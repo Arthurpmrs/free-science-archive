@@ -55,6 +55,10 @@ class Application:
         while True:
             print("1. Login")
             print("2. Register")
+            print("3. Add Publisher")
+            print("4. Add Author")
+            print("5. Add Book")
+            # print("6. Add Paper")
             print("98. Add Admin")
             print("99. Populate database with fake data")
             print("0. Exit")
@@ -64,6 +68,12 @@ class Application:
                 self.login()
             elif option == "2":
                 self.register()
+            elif option == "3":
+                self.add_publisher()
+            elif option == "4":
+                self.add_author()
+            elif option == "5":
+                self.add_book()
             elif option == "0":
                 break
             elif option == "98":
@@ -102,6 +112,97 @@ class Application:
             handler = DBHandler(con)
             handler.insert_user(user)
             print("User registered successfully.")
+
+    def add_publisher(self) -> int:
+        name = input("Name: ")
+        address = input("Address: ")
+        url = input("url: ")
+
+        publisher = Publisher(
+            name=name,
+            address=address,
+            url=url,
+            document_ids=[]
+        )
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            publisher_id = handler.insert_publisher(publisher)
+            print("Publisher added successfully.")
+
+        return publisher_id
+
+    def add_author(self) -> int:
+        last_name = input("Last name: ")
+        remaining_names = input("Remaining names: ")
+        birth_date = input("Birth date: ")
+        email = input("Email: ")
+        social_url = input("Social network url: ")
+        nationality = input("Nationality: ")
+
+        author = Author(
+            last_name=last_name,
+            remaining_name=remaining_names,
+            birth_date=birth_date,
+            email=email,
+            social_url=social_url,
+            nationality=nationality,
+            document_ids=[]
+        )
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            author_id = handler.insert_author(author)
+            print("Author added successfully.")
+
+        return author_id
+
+    def add_book(self) -> None:
+        if self.logged_user is None:
+            print("You must be logged in to add a book.")
+            return None
+
+        user_id = self.logged_user.user_id
+        title = input("Title: ")
+        language = input("Language: ")
+        year = input("Year: ")
+        isbn = input("ISBN: ")
+        edition = input("Edition: ")
+        publication_place = input("Publication place: ")
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            book = Book(
+                title=title,
+                language=language,
+                tags=[],
+                year=year,
+                publisher=None,
+                isbn=isbn,
+                edition=edition,
+                publication_place=publication_place,
+                authors=[],
+            )
+
+            document_id = handler.insert_book(book, user_id)
+
+            add_publisher = input("Add publisher? (y/n): ")
+            if add_publisher == "y":
+                publisher_id = self.add_publisher()
+            else:
+                publisher_id = None
+
+            handler.set_document_publisher(document_id, publisher_id)
+
+            add_authors = input("Add authors? (y/n): ")
+            while add_authors == "y":
+                author_id = self.add_author()
+                with DatabaseConnector() as con:
+                    handler = DBHandler(con)
+                    handler.link_author(document_id, author_id)
+                add_authors = input("Add another author? (y/n): ")
+
+            print("Book added successfully.")
 
     def populate_database(self) -> None:
         with DatabaseConnector() as con:

@@ -157,7 +157,10 @@ class DBHandler:
     def insert_book(self, book: Book, user_id: int) -> int:
         """Insert a new book into the database"""
 
-        publisher_id = self.insert_publisher(book.publisher)
+        if book.publisher:
+            publisher_id = self.insert_publisher(book.publisher)
+        else:
+            publisher_id = None
 
         parsed_book = book.get_parsed_dict()
         parsed_book.update({"publisher_id": publisher_id})
@@ -178,9 +181,10 @@ class DBHandler:
                     VALUES(:document_id, :isbn, :edition, :publication_place)
                     """, parsed_book)
 
-        for author in book.authors:
-            author_id = self.insert_author(author, cur)
-            self.link_author(author_id, document_id, cur)
+        if book.publisher:
+            for author in book.authors:
+                author_id = self.insert_author(author, cur)
+                self.link_author(author_id, document_id, cur)
 
         self.con.commit()
 
