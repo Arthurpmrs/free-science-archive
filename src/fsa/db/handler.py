@@ -254,30 +254,32 @@ class DBHandler:
         """Get a document by its id"""
 
         cur = self.con.cursor()
-
         rows = cur.execute("""
                         SELECT 
                             Document.created_at AS doc_created_at,
                             Publisher.created_at AS pub_created_at,
                             * 
                             FROM Document
-                        INNER JOIN Publisher
+                        LEFT JOIN Publisher
                             ON Document.publisher_id = Publisher.publisher_id
-                            AND Document.document_id = ?
                         LEFT JOIN Book
                             ON Document.document_id = Book.document_id
                         LEFT JOIN Paper
                             ON Document.document_id = Paper.document_id
+                        WHERE Document.document_id = ?
                         """, (document_id,))
 
-        data = dict(rows.fetchone())
+        row = rows.fetchone()
+        if not row:
+            raise ValueError("This document does not exist.")
+
+        data = dict(row)
         if data["type"] == "book":
             document = Book.from_db_row(data)
         else:
             document = Paper.from_db_row(data)
 
         document.authors = self._get_document_authors(document_id)
-
         return document
 
     def get_documents_by_author(self, last_name: str) -> list[Document]:
@@ -338,8 +340,8 @@ class DBHandler:
         rows = self.con.execute("""
                                 SELECT Document.document_id FROM Document
                                 INNER JOIN Book
-                                ON Document.document_id = Book.document_id
-                                AND Document.type = "book"
+                                    ON Document.document_id = Book.document_id
+                                    AND Document.type = "book"
                                 """)
 
         books: list[Book] = []

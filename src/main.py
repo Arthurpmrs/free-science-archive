@@ -52,7 +52,7 @@ class Application:
     logged_user: User | None = None
 
     def run(self) -> None:
-
+        self._login_as_admin()
         while True:
             print("\n###################### INFO ######################")
             if self.logged_user:
@@ -69,6 +69,7 @@ class Application:
                 print("6. Add Paper")
                 print("7. Link Document to an existing Author")
                 print("8. Link Document to an existing Publisher")
+                print("9. Update entity")
                 print("98. Add Admin")
                 print("99. Populate database with fake data")
                 print("0. Exit")
@@ -88,6 +89,10 @@ class Application:
                 self.add_document("paper")
             elif option == "7":
                 self.link_document_to_author()
+            elif option == "8":
+                self.link_document_to_publisher()
+            elif option == "9":
+                self.update_entity()
             elif option == "0":
                 break
             elif option == "98":
@@ -110,6 +115,12 @@ class Application:
             else:
                 self.logged_user = user
                 print(">> Logged in successfully.")
+
+    def _login_as_admin(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            admin = handler.get_user_by_username("admin")
+            self.logged_user = admin
 
     def register(self) -> None:
         email = input("Email: ")
@@ -266,6 +277,185 @@ class Application:
                     f"{author.author_id}: {author.last_name}, {author.remaining_name}")
             author_id = input("Author ID: ")
             handler.link_author(author_id, document_id)
+
+    def link_document_to_publisher(self) -> None:
+        if self.logged_user is None:
+            print(">> You must be logged in to add a book.")
+            return None
+
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            document_id = input("Document ID: ")
+            print("\nSelected Document: ")
+            try:
+                print(handler.get_document_by_id(document_id).title)
+            except ValueError:
+                print(">> Invalid document ID.")
+                return None
+
+            publishers = handler.get_publishers()
+            print("\nFetching publishers...")
+            time.sleep(3)
+
+            print("\nPublishers: ")
+            for publisher in publishers:
+                print(f"{publisher.publisher_id}: {publisher.name}")
+            publisher_id = input("Publisher ID: ")
+            handler.set_document_publisher(document_id, publisher_id)
+
+    def update_entity(self) -> None:
+        if self.logged_user is None:
+            print(">> You must be logged in to add a book.")
+            return None
+
+        print("\n##################### UPDATE #####################")
+        print("1. Update book")
+        print("2. Update paper")
+        print("3. Update publisher")
+        print("4. Update author")
+        option = input("Choose an option: ")
+
+        if option == "1":
+            self.update_book()
+        elif option == "2":
+            self.update_paper()
+        elif option == "3":
+            self.update_publisher()
+        elif option == "4":
+            self.update_author()
+        else:
+            print(">> Invalid option.")
+
+    def update_book(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            books = handler.get_books()
+            print("\nFetching books...")
+            time.sleep(3)
+
+            print("\nBooks: ")
+            for book in books:
+                print(f"{book.document_id}: {book.title}")
+            book_id = input("Book ID: ")
+
+            book = handler.get_book_by_id(book_id)
+            print("\nSelected book: ")
+            print(book.title)
+
+            title = input("Title: ")
+            language = input("Language: ")
+            year = input("Year: ")
+            isbn = input("ISBN: ")
+            edition = input("Edition: ")
+            publication_place = input("Publication place: ")
+
+            book.title = title
+            book.language = language
+            book.year = year
+            book.isbn = isbn
+            book.edition = edition
+            book.publication_place = publication_place
+
+            handler.update_document(book)
+            print("Book updated successfully.")
+
+    def update_paper(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            papers = handler.get_papers()
+            print("\nFetching papers...")
+            time.sleep(3)
+
+            print("\nPapers: ")
+            for paper in papers:
+                print(f"{paper.document_id}: {paper.title}")
+            paper_id = input("Paper ID: ")
+
+            paper = handler.get_paper_by_id(paper_id)
+            print("\nSelected paper: ")
+            print(paper.title)
+
+            title = input("Title: ")
+            language = input("Language: ")
+            year = input("Year: ")
+            doi = input("DOI: ")
+            journal = input("Journal: ")
+            issue = input("Issue: ")
+            pages = input("Pages: ")
+            volume = input("Volume: ")
+
+            paper.title = title
+            paper.language = language
+            paper.year = year
+            paper.doi = doi
+            paper.journal = journal
+            paper.issue = issue
+            paper.pages = pages
+            paper.volume = volume
+
+            handler.update_document(paper)
+            print("Paper updated successfully.")
+
+    def update_author(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            authors = handler.get_authors()
+            print("\nFetching authors...")
+            time.sleep(3)
+
+            print("\nAuthors: ")
+            for author in authors:
+                print(
+                    f"{author.author_id}: {author.last_name}, {author.remaining_name}")
+
+            author_id = input("Author ID: ")
+            author = handler.get_author_by_id(author_id)
+            print("\nSelected author: ")
+            print(f"{author.last_name}, {author.remaining_name}")
+
+            last_name = input("Last name: ")
+            remaining_names = input("Remaining names: ")
+            birth_date = input("Birth date: ")
+            email = input("Email: ")
+            social_url = input("Social network url: ")
+            nationality = input("Nationality: ")
+
+            author.last_name = last_name
+            author.remaining_name = remaining_names
+            author.birth_date = birth_date
+            author.email = email
+            author.social_url = social_url
+            author.nationality = nationality
+
+            handler.update_author(author)
+            print("Author updated successfully.")
+
+    def update_publisher(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            publishers = handler.get_publishers()
+            print("\nFetching publishers...")
+            time.sleep(3)
+
+            print("\nPublishers: ")
+            for publisher in publishers:
+                print(f"{publisher.publisher_id}: {publisher.name}")
+
+            publisher_id = input("Publisher ID: ")
+            publisher = handler.get_publisher_by_id(publisher_id)
+            print("\nSelected publisher: ")
+            print(publisher.name)
+
+            name = input("Name: ")
+            address = input("Address: ")
+            url = input("url: ")
+
+            publisher.name = name
+            publisher.address = address
+            publisher.url = url
+
+            handler.update_publisher(publisher)
+            print("Publisher updated successfully.")
 
     def populate_database(self) -> None:
         if self.logged_user is None:
