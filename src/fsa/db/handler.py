@@ -81,15 +81,25 @@ class DBHandler:
 
         return author_id
 
-    def link_author(self, author_id: int, document_id: int, cur: Cursor) -> None:
+    def link_author(self, author_id: int, document_id: int,
+                    cur: Cursor | None = None) -> None:
         """Link an author to a document"""
+
+        commit = False
+        if cur is None:
+            commit = True
+            cur = self.con.cursor()
 
         try:
             cur.execute("""
                         INSERT INTO Writes VALUES(?, ?)
                         """, (document_id, author_id))
+
+            if commit:
+                self.con.commit()
         except sqlite3.IntegrityError:
             print("This author is already linked to this document.")
+            print(traceback.format_exc())
 
     def _insert_document(self, parsed_document: dict, type: str,
                          user_id: int, cur: Cursor) -> tuple[bool, int]:
@@ -124,7 +134,10 @@ class DBHandler:
     def insert_paper(self, paper: Paper, user_id: int) -> int:
         """Insert a new paper into the database"""
 
-        publisher_id = self.insert_publisher(paper.publisher)
+        if paper.publisher:
+            publisher_id = self.insert_publisher(paper.publisher)
+        else:
+            publisher_id = None
 
         parsed_paper = paper.get_parsed_dict()
         parsed_paper.update({"publisher_id": publisher_id})
@@ -146,9 +159,10 @@ class DBHandler:
                     :volume)
                     """, parsed_paper)
 
-        for author in paper.authors:
-            author_id = self.insert_author(author, cur)
-            self.link_author(author_id, document_id, cur)
+        if paper.publisher:
+            for author in paper.authors:
+                author_id = self.insert_author(author, cur)
+                self.link_author(author_id, document_id, cur)
 
         self.con.commit()
 
@@ -349,6 +363,32 @@ class DBHandler:
             papers.append(self.get_document_by_id(row["document_id"]))
 
         return papers
+
+    def get_authors(self) -> list[Author]:
+        """Get all authors"""
+
+        rows = self.con.execute("""
+                                SELECT * FROM Author
+                                """)
+
+        authors: list[Author] = []
+        for row in rows:
+            authors.append(Author.from_db_row(dict(row)))
+
+        return authors
+
+    def get_publishers(self) -> list[Publisher]:
+        """Get all publishers"""
+
+        rows = self.con.execute("""
+                                SELECT * FROM Publisher
+                                """)
+
+        publishers: list[Publisher] = []
+        for row in rows:
+            publishers.append(Publisher.from_db_row(dict(row)))
+
+        return publishers
 
     def get_paper_by_id(self, document_id: int) -> Paper:
         """Get a paper by its id"""
