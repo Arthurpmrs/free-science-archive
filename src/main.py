@@ -52,7 +52,7 @@ class Application:
     logged_user: User | None = None
 
     def run(self) -> None:
-        self._login_as_admin()
+        # self._login_as_admin()
         while True:
             print("\n###################### INFO ######################")
             if self.logged_user:
