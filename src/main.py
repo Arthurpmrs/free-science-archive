@@ -1,3 +1,4 @@
+import sys
 import json
 import time
 from fsa.db.base import DatabaseConnector
@@ -47,6 +48,14 @@ def populate_papers(user_id: int):
             handler.insert_paper(paper, user_id)
 
 
+def check_go_back() -> None:
+    confirm = input("Go back to menu? (y/n) ")
+    if confirm == "y":
+        return None
+    else:
+        sys.exit()
+
+
 class Application:
 
     logged_user: User | None = None
@@ -71,6 +80,8 @@ class Application:
                 print("8. Link Document to an existing Publisher")
                 print("9. Update entity")
                 print("10. Delete entity")
+                print("11. Get documents by author")
+                print("12. Get all books")
                 print("98. Add Admin")
                 print("99. Populate database with fake data")
                 print("0. Exit")
@@ -96,6 +107,10 @@ class Application:
                 self.update_entity()
             elif option == "10":
                 self.delete_entity()
+            elif option == "11":
+                self.get_documents_by_author()
+            elif option == "12":
+                self.get_all_books()
             elif option == "0":
                 break
             elif option == "98":
@@ -572,6 +587,46 @@ class Application:
 
         populate_papers(admin.user_id)
         populate_books(admin.user_id)
+
+    def get_documents_by_author(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            authors = handler.get_authors()
+            print("\nFetching authors...")
+            time.sleep(3)
+
+            print("\nAuthors: ")
+            for author in authors:
+                print(
+                    f"{author.author_id}: {author.last_name}, {author.remaining_name}")
+            author_id = input("Author ID: ")
+
+            target_author = None
+            for author in authors:
+                if author.author_id == int(author_id):
+                    target_author = author
+                    break
+
+            documents = handler.get_documents_by_author(
+                target_author.last_name)
+            print("\nDocuments: ")
+            for document in documents:
+                print(f"{document.document_id}: {document.title}")
+
+            print("Documents fetched successfully.")
+
+    def get_all_books(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            books = handler.get_books()
+            print("\nFetching books...")
+            time.sleep(3)
+
+            print("\nBooks: ")
+            for book in books:
+                print(f"{book.document_id}: {book.title}")
+
+        return check_go_back()
 
 
 if __name__ == "__main__":
