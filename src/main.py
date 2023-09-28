@@ -70,6 +70,7 @@ class Application:
                 print("7. Link Document to an existing Author")
                 print("8. Link Document to an existing Publisher")
                 print("9. Update entity")
+                print("10. Delete entity")
                 print("98. Add Admin")
                 print("99. Populate database with fake data")
                 print("0. Exit")
@@ -93,6 +94,8 @@ class Application:
                 self.link_document_to_publisher()
             elif option == "9":
                 self.update_entity()
+            elif option == "10":
+                self.delete_entity()
             elif option == "0":
                 break
             elif option == "98":
@@ -309,10 +312,10 @@ class Application:
             return None
 
         print("\n##################### UPDATE #####################")
-        print("1. Update book")
-        print("2. Update paper")
-        print("3. Update publisher")
-        print("4. Update author")
+        print("1. Update a book")
+        print("2. Update a paper")
+        print("3. Update a publisher")
+        print("4. Update an author")
         option = input("Choose an option: ")
 
         if option == "1":
@@ -457,9 +460,110 @@ class Application:
             handler.update_publisher(publisher)
             print("Publisher updated successfully.")
 
-    def populate_database(self) -> None:
+    def delete_entity(self) -> None:
         if self.logged_user is None:
             print(">> You must be logged in to add a book.")
+            return None
+
+        print("\n##################### DELETE #####################")
+        print("1. Delete a book")
+        print("2. Delete a paper")
+        print("3. Delete a publisher")
+        print("4. Delete an author")
+
+        option = input("Choose an option: ")
+
+        if option == "1":
+            self.delete_book()
+        elif option == "2":
+            self.delete_paper()
+        elif option == "3":
+            self.delete_publisher()
+        elif option == "4":
+            self.delete_author()
+        else:
+            print(">> Invalid option.")
+
+    def delete_book(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            books = handler.get_books()
+            print("\nFetching books...")
+            time.sleep(3)
+
+            print("\nBooks: ")
+            for book in books:
+                print(f"{book.document_id}: {book.title}")
+            book_id = input("Book ID: ")
+            confirm = input("Are you sure? (y/n) ")
+            if confirm:
+                handler.delete_document(book_id)
+                print("Book deleted successfully.")
+            else:
+                print("Operation canceled.")
+                return None
+
+    def delete_paper(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            papers = handler.get_papers()
+            print("\nFetching papers...")
+            time.sleep(3)
+
+            print("\nPapers: ")
+            for paper in papers:
+                print(f"{paper.document_id}: {paper.title}")
+            paper_id = input("Paper ID: ")
+            confirm = input("Are you sure? (y/n) ")
+            if confirm == "y":
+                handler.delete_document(paper_id)
+                print("paper deleted successfully.")
+            else:
+                print("Operation canceled.")
+                return None
+
+    def delete_author(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            authors = handler.get_authors()
+            print("\nFetching authors...")
+            time.sleep(3)
+
+            print("\nAuthors: ")
+            for author in authors:
+                print(
+                    f"{author.author_id}: {author.last_name}, {author.remaining_name}")
+            author_id = input("Author ID: ")
+            confirm = input("Are you sure? (y/n) ")
+            if confirm == "y":
+                handler.delete_author(author_id)
+                print("Author deleted successfully.")
+            else:
+                print("Operation canceled.")
+                return None
+
+    def delete_publisher(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            publishers = handler.get_publishers()
+            print("\nFetching publishers...")
+            time.sleep(3)
+
+            print("\nPublishers: ")
+            for publisher in publishers:
+                print(f"{publisher.publisher_id}: {publisher.name}")
+            publisher_id = input("Publisher ID: ")
+            confirm = input("Are you sure? (y/n) ")
+            if confirm == "y":
+                handler.delete_publisher(publisher_id)
+                print("Publisher deleted successfully.")
+            else:
+                print("Operation canceled.")
+                return None
+
+    def populate_database(self) -> None:
+        if self.logged_user is None:
+            print(">> You must be logged in to add a paper.")
             return None
 
         with DatabaseConnector() as con:
