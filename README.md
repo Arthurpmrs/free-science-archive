@@ -10,6 +10,20 @@ Nessa plataforma, podem ser registrados livros e artigos, os autores relacionado
 
 Como o acervo é gerado pela comunidade, um Usuário é responsável por cadastrar um novo documento no sistema, sendo cada documento associado a apenas um Usuário.
 
+## Informações do código
+
+O banco de dados gerado pela aplicação é o arquivo `fsa.db`, um banco de dados SQLite3. Os dados utilizados parar popular o banco estão presentes na pasta `src/fakedata`.
+
+O código referente à criação das tabelas está localizado em `src/fsa/db/base.py`. Já as queries de inserção, atualização, seleção e remoção está presentes no arquivo `src/fsa/db/handler.py`.
+
+O arquivo `src/fsa/domain.py` contem as classes em python que são construídas a partir das queries no banco de dados. Para executar o programa é necessário rodar o comando abaixo. A versão do Python utilizada para o desenvolvimento foi a 3.11.1.
+
+```bash
+python src/main.py
+```
+
+Os modelos conceitual e lógico foram apresentados a seguir.
+
 ## Modelo Conceitual
 
 ![modelo coceitual](https://github.com/Arthurpmrs/free-science-archive/blob/main/er/projeto-db-1-modelo.jpg)
