@@ -6,20 +6,6 @@ from fsa.db.handler import DBHandler
 from fsa.domain import Publisher, Book, Paper, Author, User
 
 
-def add_admin():
-    user = User(
-        username="admin",
-        password="admin",
-        email="admin@admin.com"
-    )
-
-    with DatabaseConnector() as con:
-        handler = DBHandler(con)
-        admin_id = handler.insert_user(user)
-
-    return admin_id
-
-
 def populate_books(user_id: int):
     books = []
     with open("src/fakedata/books.json", "r") as file:
@@ -61,16 +47,17 @@ class Application:
     logged_user: User | None = None
 
     def run(self) -> None:
-        # self._login_as_admin()
         while True:
             print("\n###################### INFO ######################")
             if self.logged_user:
                 print(f"Logged in as: {self.logged_user.username}")
             else:
                 print(f"Not logged in.")
+
             print("\n###################### MENU ######################")
             print("1. Login")
             print("2. Register")
+
             if self.logged_user:
                 print("3. Add Publisher")
                 print("4. Add Author")
@@ -82,9 +69,20 @@ class Application:
                 print("10. Delete entity")
                 print("11. Get documents by author")
                 print("12. Get all books")
-                print("98. Add Admin")
-                print("99. Populate database with fake data")
-                print("0. Exit")
+                print("13. Get all papers")
+                print("14. Get all publishers")
+                print("15. Get all authors")
+                print("16. Get all users")
+                print("17. Update user")
+                print("18. Delete user")
+                print("100. Logout")
+
+            print("0. Exit")
+
+            if self.logged_user and self.logged_user.username == "admin":
+                print("\n##################### ADMIN ######################")
+                print("9999. Populate database with fake data")
+
             option = input("Choose an option: ")
 
             if option == "1":
@@ -111,12 +109,25 @@ class Application:
                 self.get_documents_by_author()
             elif option == "12":
                 self.get_all_books()
+            elif option == "13":
+                self.get_all_papers()
+            elif option == "14":
+                self.get_all_publishers()
+            elif option == "15":
+                self.get_all_authors()
+            elif option == "16":
+                self.get_all_users()
+            elif option == "17":
+                self.update_user()
+            elif option == "18":
+                self.delete_user()
+            elif option == "100":
+                self.logged_user = None
+                print(">> Logged out successfully.")
+            elif option == "9999":
+                self.populate_database()
             elif option == "0":
                 break
-            elif option == "98":
-                add_admin()
-            elif option == "99":
-                self.populate_database()
             else:
                 print(">> Invalid option. Try again.")
 
@@ -126,10 +137,14 @@ class Application:
 
         with DatabaseConnector() as con:
             handler = DBHandler(con)
-            user = handler.get_user_by_username(username)
+            try:
+                user = handler.get_user_by_username(username)
+            except Exception:
+                user = None
 
             if user is None or user.password != password:
                 print(">> Invalid credentials.")
+                return check_go_back()
             else:
                 self.logged_user = user
                 print(">> Logged in successfully.")
@@ -475,6 +490,28 @@ class Application:
             handler.update_publisher(publisher)
             print("Publisher updated successfully.")
 
+    def update_user(self) -> None:
+        if self.logged_user is None:
+            print(">> You must be logged in.")
+            return None
+
+        print(f"You are logged in as: {self.logged_user.username}")
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+
+            user = handler.get_user_by_username(self.logged_user.username)
+
+            email = input("Email: ")
+            username = input("Username: ")
+            password = input("Password: ")
+
+            user.email = email
+            user.username = username
+            user.password = password
+
+            handler.update_user(user)
+            print("User updated successfully.")
+
     def delete_entity(self) -> None:
         if self.logged_user is None:
             print(">> You must be logged in to add a book.")
@@ -576,6 +613,24 @@ class Application:
                 print("Operation canceled.")
                 return None
 
+    def delete_user(self) -> None:
+        if self.logged_user is None:
+            print(">> You must be logged in.")
+            return None
+
+        print(f"You are logged in as: {self.logged_user.username}")
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+
+            confirm = input("Are you sure? (y/n) ")
+            if confirm == "y":
+                handler.delete_user(self.logged_user.user_id)
+                self.logged_user = None
+                print("User deleted successfully.")
+            else:
+                print("Operation canceled.")
+                return None
+
     def populate_database(self) -> None:
         if self.logged_user is None:
             print(">> You must be logged in to add a paper.")
@@ -625,6 +680,59 @@ class Application:
             print("\nBooks: ")
             for book in books:
                 print(f"{book.document_id}: {book.title}")
+
+        return check_go_back()
+
+    def get_all_papers(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            papers = handler.get_papers()
+            print("\nFetching papers...")
+            time.sleep(3)
+
+            print("\nPapers: ")
+            for paper in papers:
+                print(f"{paper.document_id}: {paper.title}")
+
+        return check_go_back()
+
+    def get_all_publishers(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            publishers = handler.get_publishers()
+            print("\nFetching publishers...")
+            time.sleep(3)
+
+            print("\nPublishers: ")
+            for publisher in publishers:
+                print(f"{publisher.publisher_id}: {publisher.name}")
+
+        return check_go_back()
+
+    def get_all_authors(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            authors = handler.get_authors()
+            print("\nFetching authors...")
+            time.sleep(3)
+
+            print("\nAuthors: ")
+            for author in authors:
+                print(
+                    f"{author.author_id}: {author.last_name}, {author.remaining_name}")
+
+        return check_go_back()
+
+    def get_all_users(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            users = handler.get_users()
+            print("\nFetching users...")
+            time.sleep(3)
+
+            print("\nUsers: ")
+            for user in users:
+                print(f"{user.user_id}: {user.username}")
 
         return check_go_back()
 

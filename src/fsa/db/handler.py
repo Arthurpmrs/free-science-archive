@@ -334,6 +334,19 @@ class DBHandler:
         else:
             raise ValueError("This document is not a book.")
 
+    def get_users(self) -> list[User]:
+        """Get all users"""
+
+        rows = self.con.execute("""
+                                SELECT * FROM User
+                                """)
+
+        users: list[User] = []
+        for row in rows:
+            users.append(User.from_db_row(dict(row)))
+
+        return users
+
     def get_books(self) -> list[Book]:
         """Get all books"""
 
