@@ -75,6 +75,8 @@ class Application:
                 print("16. Get all users")
                 print("17. Update user")
                 print("18. Delete user")
+                print("19. Get Book by ID")
+                print("20. Get Paper by ID")
                 print("100. Logout")
 
             print("0. Exit")
@@ -121,6 +123,10 @@ class Application:
                 self.update_user()
             elif option == "18":
                 self.delete_user()
+            elif option == "19":
+                self.get_book_by_id()
+            elif option == "20":
+                self.get_paper_by_id()
             elif option == "100":
                 self.logged_user = None
                 print(">> Logged out successfully.")
@@ -733,6 +739,73 @@ class Application:
             print("\nUsers: ")
             for user in users:
                 print(f"{user.user_id}: {user.username}")
+
+        return check_go_back()
+
+    def get_book_by_id(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            books = handler.get_books()
+            print("\nFetching books...")
+            time.sleep(3)
+
+            print("\nBooks: ")
+            for book in books:
+                print(f"{book.document_id}: {book.title}")
+            book_id = input("Book ID: ")
+
+            book = handler.get_book_by_id(book_id)
+            print("\nSelected book: ")
+            print(
+                "---------------------------------------------------------------------------------")
+            print(f"Title: {book.title}") if book.title else None
+            print("Authors: ")
+            for author in book.authors:
+                print(f"    {author.last_name}, {author.remaining_name}")
+            print(f"Language: {book.language}") if book.language else None
+            print(f"Year: {book.year}") if book.year else None
+            print(f"ISBN: {book.isbn}") if book.isbn else None
+            print(f"Edition: {book.edition}") if book.edition else None
+            print(
+                f"Publication place: {book.publication_place}") if book.publication_place else None
+            print(
+                f"Publisher: {book.publisher.name}") if book.publisher else None
+            print(
+                "---------------------------------------------------------------------------------")
+
+        return check_go_back()
+
+    def get_paper_by_id(self) -> None:
+        with DatabaseConnector() as con:
+            handler = DBHandler(con)
+            papers = handler.get_papers()
+            print("\nFetching papers...")
+            time.sleep(3)
+
+            print("\nPapers: ")
+            for paper in papers:
+                print(f"{paper.document_id}: {paper.title}")
+            paper_id = input("Paper ID: ")
+
+            paper = handler.get_paper_by_id(paper_id)
+            print("\nSelected paper: ")
+            print(
+                "---------------------------------------------------------------------------------")
+            print(f"Title: {paper.title}") if paper.title else None
+            print("Authors: ")
+            for author in paper.authors:
+                print(f"    {author.last_name}, {author.remaining_name}")
+            print(f"Language: {paper.language}") if paper.language else None
+            print(f"Year: {paper.year}") if paper.year else None
+            print(f"DOI: {paper.doi}") if paper.doi else None
+            print(f"Journal: {paper.journal}") if paper.journal else None
+            print(f"Issue: {paper.issue}") if paper.issue else None
+            print(f"Pages: {paper.pages}") if paper.pages else None
+            print(f"Volume: {paper.volume}") if paper.volume else None
+            print(
+                f"Publisher: {paper.publisher.name}") if paper.publisher else None
+            print(
+                "---------------------------------------------------------------------------------")
 
         return check_go_back()
 
